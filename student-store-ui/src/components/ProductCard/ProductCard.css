@@ -75,3 +75,174 @@
   padding: 5px;
   margin: 10px 5px;
 }
+/* src/components/ProductCard/ProductCard.css */
+
+.ProductCard {
+  /* …your existing rules… */
+  display: flex;
+  flex-direction: column;
+}
+
+.ProductCard .media img {
+  /* keep your sizing */
+}
+
+.ProductCard .product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+}
+
+.ProductCard .info {
+  margin-bottom: 0.5rem;
+}
+
+.ProductCard .actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.ProductCard .actions .button {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--bright-green);
+  color: var(--bright-green);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: transparent;
+}
+
+.ProductCard .actions .quantity {
+  min-width: 1.5rem;          /* reserve enough space for “0”, “10”, etc */
+  text-align: center;
+  font-weight: 600;
+}
+
+/* src/components/ProductCard/ProductCard.css */
+.ProductCard {
+  width: 250px;
+  background: var(--pure-white);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 10px;
+}
+
+.ProductCard .media {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ProductCard .media img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.ProductCard .product-info {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.ProductCard .info {
+  flex: 1;
+}
+
+.ProductCard .info .product-name {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.ProductCard .info .product-price {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+/* Actions container */
+.ProductCard .actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Quantity controls */
+.ProductCard .actions .quantity {
+  display: flex;
+  align-items: center;
+}
+
+.ProductCard .actions .quantity .amt {
+  display: inline-block;
+  min-width: 24px;
+  text-align: center;
+  font-weight: 500;
+  margin: 0 8px;
+}
+
+/* Buttons */
+.ProductCard .actions .buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.ProductCard .actions .buttons i {
+  cursor: pointer;
+  font-size: 1.2rem;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--bright-green);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.ProductCard .actions .buttons i:hover {
+  background: var(--accent-green);
+  color: white;
+}
+
+/* Ensure the minus button is disabled when qty is zero */
+.ProductCard .actions .buttons i[disabled] {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.ProductCard .actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.ProductCard .qty-btn {
+  border: 1px solid var(--bright-green);
+  background: white;
+  color: var(--bright-green);
+  font-size: 1rem;
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.ProductCard .qty-display {
+  min-width: 1.5rem;
+  text-align: center;
+}

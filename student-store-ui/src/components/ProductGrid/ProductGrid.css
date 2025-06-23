@@ -22,3 +22,11 @@
   flex-wrap: wrap;
   gap: 20px;
 }
+/* ProductGrid.css */
+.ProductGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* centers the cards */
+  gap: 20px;
+  padding: 20px;
+}

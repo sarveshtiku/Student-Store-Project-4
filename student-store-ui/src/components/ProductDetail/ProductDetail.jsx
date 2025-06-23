@@ -1,60 +1,50 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
-import NotFound from "../NotFound/NotFound";
-import { formatPrice } from "../../utils/format";
-import "./ProductDetail.css";
+// src/components/ProductDetail/ProductDetail.jsx
+import { useState, useEffect } from "react"
+import { useParams, Link } from "react-router-dom"
+import { fetchJSON } from "../../services/api"
+import { formatPrice } from "../../utils/format"
+import "./ProductDetail.css"
 
-function ProductDetail({ addToCart, removeFromCart, getQuantityOfItemInCart }) {
-  
-  const { productId } = useParams();
-  const [product, setProduct] = useState(null);
-  const [isFetching, setIsFetching] = useState(false);
-  const [error, setError] = useState(null);
+export default function ProductDetail({ addToCart, removeFromCart, getQuantity }) {
+  const { productId } = useParams()
+  const [product, setProduct] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
+  useEffect(() => {
+    setLoading(true)
+    fetchJSON(`/products/${productId}`)
+      .then(setProduct)
+      .catch(setError)
+      .finally(() => setLoading(false))
+  }, [productId])
 
-  if (error) {
-    return <NotFound />;
-  }
+  if (loading) return <p>Loading…</p>
+  if (error) return <p>Error loading product.</p>
+  if (!product) return <p>Product not found.</p>
 
-  if (isFetching || !product) {
-    return <h1>Loading...</h1>;
-  }
-
-  const quantity = getQuantityOfItemInCart(product);
-
-  const handleAddToCart = () => {
-    if (product.id) {
-      addToCart(product)
-    }
-  };
-
-  const handleRemoveFromCart = () => {
-    if (product.id) {
-      removeFromCart(product);
-    }
-  };
+  const qty = getQuantity(product)
 
   return (
     <div className="ProductDetail">
-      <div className="product-card">
+      <Link to="/" className="back-link">← Back</Link>
+
+      <div className="detail-card">
         <div className="media">
-          <img src={product.image_url || "/placeholder.png"} alt={product.name} />
+          <img src={product.imageUrl} alt={product.name} />
         </div>
-        <div className="product-info">
-          <p className="product-name">{product.name}</p>
-          <p className="product-price">{formatPrice(product.price)}</p>
-          <p className="description">{product.description}</p>
+        <div className="info">
+          <h2>{product.name}</h2>
+          <p className="price">{formatPrice(product.price)}</p>
+          <p>{product.description}</p>
+
           <div className="actions">
-            <button onClick={handleAddToCart}>Add to Cart</button>
-            {quantity > 0 && <button onClick={handleRemoveFromCart}>Remove from Cart</button>}
-            {quantity > 0 && <span className="quantity">Quantity: {quantity}</span>}
+            <button onClick={() => removeFromCart(product)} disabled={qty === 0}>−</button>
+            <span className="qty">{qty}</span>
+            <button onClick={() => addToCart(product)}>＋</button>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
-
-
-export default ProductDetail;

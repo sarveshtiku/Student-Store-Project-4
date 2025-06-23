@@ -1,121 +1,98 @@
-import PaymentInfo from "../PaymentInfo/PaymentInfo";
-import CheckoutSuccess from "../CheckoutSuccess/CheckoutSuccess";
-import { calculateTaxesAndFees, calculateTotal } from "../../utils/calculations";
-import { formatPrice } from "../../utils/format";
-import "./ShoppingCart.css";
+// src/components/ShoppingCart/ShoppingCart.jsx
 
-
-const CartTable = ({ products, cart }) => {
-  const productMapping = products.reduce((acc, item) => {
-    acc[item.id] = item; 
-    return acc;
-  }, {});
-
-  const productRows = Object.keys(cart).map((productId) => {
-    const product = productMapping[productId];
-
-    if (!product) {
-      console.error(`Product with ID ${productId} not found in products array.`);
-      return null;
-    }
-
-    return {
-      ...product,
-      quantity: cart[productId],
-      totalPrice: cart[productId] * product.price,
-    };
-  }).filter(row => row !== null); // Filter out any null values
-
-  const subTotal = productRows.reduce((acc, p) => acc + p.totalPrice, 0);
-
-  return (
-    <>
-      <div className="CartTable">
-        <div className="header">
-          <div className="header-row">
-            <span className="flex-2">Name</span>
-            <span className="center">Quantity</span>
-            <span className="center">Unit Price</span>
-            <span className="center">Cost</span>
-          </div>
-
-          {productRows.map((product) => (
-            <div key={product.id} className="product-row">
-              <span className="flex-2">{product.name}</span>
-              <span className="center">{product.quantity}</span>
-              <span className="center">{formatPrice(product.price)}</span>
-              <span className="center">{formatPrice(product.totalPrice)}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="receipt">
-          <div className="receipt-subtotal">
-            <span className="label">Subtotal</span>
-            <span />
-            <span />
-            <span className="center">{formatPrice(subTotal)}</span>
-          </div>
-          <div className="receipt-taxes">
-            <span className="label">Taxes and Fees</span>
-            <span />
-            <span />
-            <span className="center">{formatPrice(calculateTaxesAndFees(subTotal))}</span>
-          </div>
-          <div className="receipt-total">
-            <span className="label">Total</span>
-            <span />
-            <span />
-            <span className="center">{formatPrice(calculateTotal(subTotal))}</span>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};
-
-const CartItems = ({ products, cart }) => {
-  const hasItems = Object.keys(cart).length;
-
-  return (
-    <>
-      <h3 className="">
-        Shopping Cart{" "}
-        <span className="button">
-          <i className="material-icons md-48">add_shopping_cart</i>
-        </span>
-      </h3>
-      {hasItems ? (
-        <>
-          <CartTable products={products} cart={cart} />
-        </>
-      ) : (
-        <>
-          <div className="notification">No items added to cart yet. Start shopping now!</div>
-        </>
-      )}
-    </>
-  );
-};
+import React from "react"
+import PaymentInfo from "../PaymentInfo/PaymentInfo"
+import CheckoutSuccess from "../CheckoutSuccess/CheckoutSuccess"
+import { calculateTaxesAndFees, calculateTotal } from "../../utils/calculations"
+import { formatPrice } from "../../utils/format"
+import "./ShoppingCart.css"
 
 export default function ShoppingCart({
-  isOpen,
   products,
   cart,
-  toggleSidebar,
   userInfo,
   setUserInfo,
-  handleOnCheckout,
-  isCheckingOut,
-  order,
-  setOrder,
+  clearCart,
   error,
+  isCheckingOut,
+  handleOnCheckout,
+  order,
 }) {
+  // Look up product data by ID
+  const productMap = products.reduce((map, p) => {
+    map[p.id] = p
+    return map
+  }, {})
+
+  // Build rows for items in cart
+  const rows = Object.entries(cart).map(([pid, qty]) => {
+    const p = productMap[pid]
+    return {
+      ...p,
+      quantity: qty,
+      totalPrice: p.price * qty,
+    }
+  })
+
+  // Totals
+  const subTotal = rows.reduce((sum, r) => sum + r.totalPrice, 0)
+  const fees = calculateTaxesAndFees(subTotal)
+  const total = calculateTotal(subTotal)
+
+  // If order just placed, show success screen
+  if (order) {
+    return <CheckoutSuccess order={order} />
+  }
+
   return (
     <div className="ShoppingCart">
-      {isOpen ? (
-        <div className="open">
-          <CartItems products={products} cart={cart} />
+      {rows.length === 0 ? (
+        <div className="notification">
+          No items in cart. Add some from the catalog!
+        </div>
+      ) : (
+        <>
+          {/* Cart Items Table */}
+          <div className="CartTable">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th className="center">Qty</th>
+                  <th className="center">Unit Price</th>
+                  <th className="center">Cost</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((r) => (
+                  <tr key={r.id}>
+                    <td>{r.name}</td>
+                    <td className="center">{r.quantity}</td>
+                    <td className="center">{formatPrice(r.price)}</td>
+                    <td className="center">{formatPrice(r.totalPrice)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Receipt */}
+          <div className="receipt">
+            <div className="row">
+              <span>Subtotal</span>
+              <span>{formatPrice(subTotal)}</span>
+            </div>
+            <div className="row">
+              <span>Taxes & Fees</span>
+              <span>{formatPrice(fees)}</span>
+            </div>
+            <div className="row total">
+              <span>Total</span>
+              <span>{formatPrice(total)}</span>
+            </div>
+          </div>
+
+          {/* Payment Form */}
           <PaymentInfo
             userInfo={userInfo}
             setUserInfo={setUserInfo}
@@ -123,11 +100,8 @@ export default function ShoppingCart({
             isCheckingOut={isCheckingOut}
             error={error}
           />
-          <CheckoutSuccess userInfo={userInfo} order={order} setOrder={setOrder} />
-        </div>
-      ) : (
-        null
+        </>
       )}
     </div>
-  );
+  )
 }

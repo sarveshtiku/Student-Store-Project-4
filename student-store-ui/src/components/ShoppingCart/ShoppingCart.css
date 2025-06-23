@@ -112,3 +112,136 @@
   font-weight: 600;
   padding-left: 10px;
 }
+/* src/components/ShoppingCart/ShoppingCart.css */
+
+.ShoppingCart {
+  width: 100%;
+  height: 100%;
+  background: var(--dark-blue);
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* CONTAINER WHEN OPEN */
+.ShoppingCart .open {
+  max-width: 575px; /* match your sidebar width */
+  margin: 0 auto;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+/* TABLE STYLING */
+.CartTable {
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.CartTable table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.CartTable thead {
+  background: var(--dark-blue);
+}
+
+.CartTable th,
+.CartTable td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.CartTable th {
+  color: white;
+  font-weight: 600;
+}
+
+.CartTable tbody tr {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.CartTable tbody tr:last-child {
+  border-bottom: none;
+}
+
+.CartTable td.center {
+  text-align: center;
+}
+
+/* RECEIPT STYLING */
+.receipt {
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.receipt .row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+}
+
+.receipt .row:not(:last-child) {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.receipt .row.total {
+  font-weight: 600;
+}
+
+/* PAYMENT INFO SECTION */
+.PaymentInfo {
+  background: var(--dark-blue);
+  padding: 0; /* container already has padding */
+}
+
+.PaymentInfo h3 {
+  color: white;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.PaymentInfo .input-field {
+  margin-bottom: 1rem;
+}
+
+.PaymentInfo .label {
+  color: white;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.PaymentInfo .control input {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.PaymentInfo .is-danger {
+  color: var(--bright-red);
+  margin-bottom: 1rem;
+}
+
+.PaymentInfo .field .button {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid white;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.PaymentInfo .field .button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

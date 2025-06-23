@@ -32,6 +32,8 @@ function Sidebar({ cart, isOpen, products, userInfo, setUserInfo, toggleSidebar,
           error={error}
           order={order}
           setOrder={setOrder}
+          userInfo={userInfo}
+          setUserInfo={setUserInfo}
         />
         
       </div>

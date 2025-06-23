@@ -1,119 +1,170 @@
-import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
-import SubNavbar from "../SubNavbar/SubNavbar";
-import Sidebar from "../Sidebar/Sidebar";
-import Home from "../Home/Home";
-import ProductDetail from "../ProductDetail/ProductDetail";
-import NotFound from "../NotFound/NotFound";
-import { removeFromCart, addToCart, getQuantityOfItemInCart, getTotalItemsInCart } from "../../utils/cart";
-import "./App.css";
+// src/components/App/App.jsx
+import { useState, useEffect } from "react"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { fetchJSON } from "../../services/api"
 
-function App() {
+import SubNavbar from "../SubNavbar/SubNavbar"
+import Home from "../Home/Home"
+import ProductDetail from "../ProductDetail/ProductDetail"
+import Sidebar from "../Sidebar/Sidebar"
+import ShoppingCart from "../ShoppingCart/ShoppingCart"
+import CheckoutSuccess from "../CheckoutSuccess/CheckoutSuccess"
 
-  // State variables
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState("All Categories");
-  const [searchInputValue, setSearchInputValue] = useState("");
-  const [userInfo, setUserInfo] = useState({ name: "", dorm_number: ""});
-  const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState({});
-  const [isFetching, setIsFetching] = useState(false);
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [error, setError] = useState(null);
-  const [order, setOrder] = useState(null);
+import "./App.css"
 
-  // Toggles sidebar
-  const toggleSidebar = () => setSidebarOpen((isOpen) => !isOpen);
+export default function App() {
+  // UI & data
+  const [products, setProducts] = useState([])
+  const [cart, setCart] = useState({})           // { [productId]: qty }
+  const [isFetching, setIsFetching] = useState(false)
+  const [isCheckingOut, setIsCheckingOut] = useState(false)
+  const [order, setOrder] = useState(null)
+  const [error, setError] = useState(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [activeCategory, setActiveCategory] = useState("All Categories")
+  const [searchInputValue, setSearchInputValue] = useState("")
+  const [userInfo, setUserInfo] = useState({ name: "", dorm_number: "" })
 
-  // Functions to change state (used for lifting state)
-  const handleOnRemoveFromCart = (item) => setCart(removeFromCart(cart, item));
-  const handleOnAddToCart = (item) => setCart(addToCart(cart, item));
-  const handleGetItemQuantity = (item) => getQuantityOfItemInCart(cart, item);
-  const handleGetTotalCartItems = () => getTotalItemsInCart(cart);
+  // load products once
+  useEffect(() => {
+    setIsFetching(true)
+    fetchJSON("/products")
+      .then(setProducts)
+      .catch(setError)
+      .finally(() => setIsFetching(false))
+  }, [])
 
-  const handleOnSearchInputChange = (event) => {
-    setSearchInputValue(event.target.value);
-  };
+  // cart helpers
+  const addToCart = (product) =>
+    setCart((c) => ({ ...c, [product.id]: (c[product.id] || 0) + 1 }))
 
+  const removeFromCart = (product) =>
+    setCart((c) => {
+      const next = { ...c }
+      next[product.id] = (next[product.id] || 0) - 1
+      if (next[product.id] <= 0) delete next[product.id]
+      return next
+    })
+
+  const clearCart = () => setCart({})
+
+  const getQuantity = (product) => cart[product.id] || 0
+  const getTotalItems = () =>
+    Object.values(cart).reduce((sum, q) => sum + q, 0)
+
+  // checkout: POST /orders
   const handleOnCheckout = async () => {
-  }
+    setIsCheckingOut(true)
+    setError(null)
 
+    const items = Object.entries(cart).map(([id, qty]) => ({
+      productId: +id,
+      quantity: qty,
+      price: products.find((p) => p.id === +id).price,
+    }))
+
+    try {
+      const created = await fetchJSON("/orders", {
+        method: "POST",
+        body: JSON.stringify({
+          customer: 123,   // replace when you have real auth
+          status: "pending",
+          items,
+        }),
+      })
+      setOrder(created)
+      clearCart()
+      setSidebarOpen(true)
+    } catch (e) {
+      setError(e)
+    } finally {
+      setIsCheckingOut(false)
+    }
+  }
 
   return (
     <div className="App">
       <BrowserRouter>
+        {/* slide-out cart sidebar */}
         <Sidebar
+          isOpen={sidebarOpen}
+          toggleSidebar={() => setSidebarOpen((o) => !o)}
           cart={cart}
+          products={products}
+          getQuantity={getQuantity}
+          getTotalItems={getTotalItems}
+          handleOnCheckout={handleOnCheckout}
+          isCheckingOut={isCheckingOut}
+          order={order}
           error={error}
           userInfo={userInfo}
           setUserInfo={setUserInfo}
-          isOpen={sidebarOpen}
-          products={products}
-          toggleSidebar={toggleSidebar}
-          isCheckingOut={isCheckingOut}
-          addToCart={handleOnAddToCart}
-          removeFromCart={handleOnRemoveFromCart}
-          getQuantityOfItemInCart={handleGetItemQuantity}
-          getTotalItemsInCart={handleGetTotalCartItems}
-          handleOnCheckout={handleOnCheckout}
-          order={order}
-          setOrder={setOrder}
         />
+
         <main>
+          {/* category / search bar */}
           <SubNavbar
             activeCategory={activeCategory}
             setActiveCategory={setActiveCategory}
             searchInputValue={searchInputValue}
-            handleOnSearchInputChange={handleOnSearchInputChange}
+            handleOnSearchInputChange={(e) =>
+              setSearchInputValue(e.target.value)
+            }
           />
+
           <Routes>
+            {/* product grid */}
             <Route
               path="/"
               element={
                 <Home
-                  error={error}
                   products={products}
                   isFetching={isFetching}
                   activeCategory={activeCategory}
-                  setActiveCategory={setActiveCategory}
-                  addToCart={handleOnAddToCart}
                   searchInputValue={searchInputValue}
-                  removeFromCart={handleOnRemoveFromCart}
-                  getQuantityOfItemInCart={handleGetItemQuantity}
+                  addToCart={addToCart}
+                  removeFromCart={removeFromCart}
+                  getQuantity={getQuantity}
                 />
               }
             />
+
+            {/* product detail page */}
             <Route
-              path="/:productId"
+              path="/products/:productId"
               element={
                 <ProductDetail
-                  cart={cart}
-                  error={error}
-                  products={products}
-                  addToCart={handleOnAddToCart}
-                  removeFromCart={handleOnRemoveFromCart}
-                  getQuantityOfItemInCart={handleGetItemQuantity}
+                  addToCart={addToCart}
+                  removeFromCart={removeFromCart}
+                  getQuantity={getQuantity}
                 />
               }
             />
+
+            {/* full cart view */}
             <Route
-              path="*"
+              path="/cart"
               element={
-                <NotFound
-                  error={error}
+                <ShoppingCart
                   products={products}
-                  activeCategory={activeCategory}
-                  setActiveCategory={setActiveCategory}
+                  cart={cart}
+                  clearCart={clearCart}
+                  error={error}
+                  isCheckingOut={isCheckingOut}
+                  handleOnCheckout={handleOnCheckout}
+                  order={order}
                 />
               }
+            />
+
+            {/* after-checkout confirmation */}
+            <Route
+              path="/checkout-success"
+              element={<CheckoutSuccess order={order} />}
             />
           </Routes>
         </main>
       </BrowserRouter>
     </div>
-  );
+  )
 }
-
-export default App;
- 

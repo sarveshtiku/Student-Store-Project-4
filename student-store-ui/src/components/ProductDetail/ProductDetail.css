@@ -80,3 +80,56 @@
 .ProductDetail .quantity {
   font-size: 14px;
 }
+
+.ProductDetail {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: white;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.ProductDetail .media img {
+  width: 100%;
+  border-radius: 4px;
+}
+
+.ProductDetail .info {
+  margin-top: 1rem;
+}
+
+.ProductDetail .info h2 {
+  margin-bottom: 0.5rem;
+}
+
+.ProductDetail .price {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.ProductDetail .desc {
+  margin-bottom: 1rem;
+}
+
+.ProductDetail .actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ProductDetail .qty-btn {
+  border: 1px solid var(--bright-green);
+  background: white;
+  color: var(--bright-green);
+  font-size: 1.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ProductDetail .qty-display {
+  font-size: 1.25rem;
+  min-width: 2rem;
+  text-align: center;
+}

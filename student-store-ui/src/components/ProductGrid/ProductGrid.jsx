@@ -1,32 +1,28 @@
+// src/components/ProductGrid/ProductGrid.jsx
+import React from "react"
 import ProductCard from "../ProductCard/ProductCard"
 import "./ProductGrid.css"
 
-function ProductGrid({ addToCart, removeFromCart, getQuantityOfItemInCart, products = [] }) {
+export default function ProductGrid({
+  products = [],
+  addToCart,
+  removeFromCart,
+  getQuantity,
+}) {
+  if (!products.length)
+    return <div>No products available for this filter.</div>
 
   return (
-    <div id="Buy" className="ProductGrid">
-      <div className="content">
-        <div className="grid">
-
-          {!products?.length ? (
-            <div className="card">
-              <p>No products available</p>
-            </div>
-          ) : products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              quantity={getQuantityOfItemInCart(product)}
-              addToCart={() => addToCart(product)}
-              removeFromCart={() => removeFromCart(product)}
-            />
-          ))}
-          
-        </div>
-      </div>
+    <div className="ProductGrid">
+      {products.map((product) => (
+        <ProductCard
+          key={product.id}
+          product={product}
+          quantity={getQuantity(product)}
+          addToCart={() => addToCart(product)}
+          removeFromCart={() => removeFromCart(product)}
+        />
+      ))}
     </div>
   )
-
 }
-
-export default ProductGrid;

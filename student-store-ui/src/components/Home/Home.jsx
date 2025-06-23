@@ -1,32 +1,34 @@
+// src/components/Home/Home.jsx
+import React from "react"
 import ProductGrid from "../ProductGrid/ProductGrid"
 import "./Home.css"
 
-function Home({isFetching, products, addToCart, removeFromCart, searchInputValue, getQuantityOfItemInCart, activeCategory, }) {
+export default function Home({
+  products,
+  isFetching,
+  addToCart,
+  removeFromCart,
+  getQuantity,
+  activeCategory,
+  searchInputValue,
+}) {
+  if (isFetching) return <div>Loading products…</div>
 
-  // Filters products by the active category if it is not 'All Categories'.
-  const productsByCategory =
-    Boolean(activeCategory) && activeCategory !== "All Categories"
-      ? products.filter((p) => p.category === activeCategory)
-      : products
-
-  // Filters products by the active category if it is not 'All Categories',
-  // then further filters the result by the search input value if it is not empty.
-  const productsToShow = Boolean(searchInputValue)
-    ? productsByCategory.filter((p) => p.name.toLowerCase().indexOf(searchInputValue.toLowerCase()) !== -1)
-    : productsByCategory
-
-
+  // filter logic
+  let list = products
+  if (activeCategory !== "All Categories") {
+    list = list.filter((p) => p.category === activeCategory)
+  }
+  if (searchInputValue) {
+    const q = searchInputValue.toLowerCase()
+    list = list.filter((p) => p.name.toLowerCase().includes(q))
+  }
   return (
-    <div className="Home">
-      <ProductGrid
-        products={productsToShow}
-        isFetching={isFetching}
-        addToCart={addToCart}
-        removeFromCart={removeFromCart}
-        getQuantityOfItemInCart={getQuantityOfItemInCart}
-      />
-    </div>
+    <ProductGrid
+      products={list}
+      addToCart={addToCart}
+      removeFromCart={removeFromCart}
+      getQuantity={getQuantity}
+    />
   )
 }
-
-export default Home;
