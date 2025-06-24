@@ -1,6 +1,6 @@
 // src/components/App/App.jsx
 import { useState, useEffect } from "react"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { Routes, Route, useNavigate } from "react-router-dom"
 import { fetchJSON } from "../../services/api"
 
 import SubNavbar from "../SubNavbar/SubNavbar"
@@ -9,13 +9,13 @@ import ProductDetail from "../ProductDetail/ProductDetail"
 import Sidebar from "../Sidebar/Sidebar"
 import ShoppingCart from "../ShoppingCart/ShoppingCart"
 import CheckoutSuccess from "../CheckoutSuccess/CheckoutSuccess"
+import PastOrders from "../PastOrders/PastOrders"
 
 import "./App.css"
 
 export default function App() {
-  // UI & data
   const [products, setProducts] = useState([])
-  const [cart, setCart] = useState({})           // { [productId]: qty }
+  const [cart, setCart] = useState({})
   const [isFetching, setIsFetching] = useState(false)
   const [isCheckingOut, setIsCheckingOut] = useState(false)
   const [order, setOrder] = useState(null)
@@ -25,7 +25,9 @@ export default function App() {
   const [searchInputValue, setSearchInputValue] = useState("")
   const [userInfo, setUserInfo] = useState({ name: "", dorm_number: "" })
 
-  // load products once
+  const navigate = useNavigate()
+
+  // load products
   useEffect(() => {
     setIsFetching(true)
     fetchJSON("/products")
@@ -34,25 +36,20 @@ export default function App() {
       .finally(() => setIsFetching(false))
   }, [])
 
-  // cart helpers
-  const addToCart = (product) =>
-    setCart((c) => ({ ...c, [product.id]: (c[product.id] || 0) + 1 }))
-
-  const removeFromCart = (product) =>
+  const addToCart = (p) =>
+    setCart((c) => ({ ...c, [p.id]: (c[p.id] || 0) + 1 }))
+  const removeFromCart = (p) =>
     setCart((c) => {
       const next = { ...c }
-      next[product.id] = (next[product.id] || 0) - 1
-      if (next[product.id] <= 0) delete next[product.id]
+      next[p.id] = (next[p.id] || 0) - 1
+      if (next[p.id] <= 0) delete next[p.id]
       return next
     })
-
   const clearCart = () => setCart({})
-
-  const getQuantity = (product) => cart[product.id] || 0
+  const getQuantity = (p) => cart[p.id] || 0
   const getTotalItems = () =>
     Object.values(cart).reduce((sum, q) => sum + q, 0)
 
-  // checkout: POST /orders
   const handleOnCheckout = async () => {
     setIsCheckingOut(true)
     setError(null)
@@ -67,7 +64,7 @@ export default function App() {
       const created = await fetchJSON("/orders", {
         method: "POST",
         body: JSON.stringify({
-          customer: 123,   // replace when you have real auth
+          customer: 123,
           status: "pending",
           items,
         }),
@@ -75,6 +72,7 @@ export default function App() {
       setOrder(created)
       clearCart()
       setSidebarOpen(true)
+      navigate("/checkout-success")
     } catch (e) {
       setError(e)
     } finally {
@@ -84,87 +82,90 @@ export default function App() {
 
   return (
     <div className="App">
-      <BrowserRouter>
-        {/* slide-out cart sidebar */}
-        <Sidebar
-          isOpen={sidebarOpen}
-          toggleSidebar={() => setSidebarOpen((o) => !o)}
-          cart={cart}
-          products={products}
-          getQuantity={getQuantity}
+      <Sidebar
+        isOpen={sidebarOpen}
+        toggleSidebar={() => setSidebarOpen((o) => !o)}
+        cart={cart}
+        products={products}
+        getQuantity={getQuantity}
+        getTotalItems={getTotalItems}
+        handleOnCheckout={handleOnCheckout}
+        isCheckingOut={isCheckingOut}
+        order={order}
+        error={error}
+        userInfo={userInfo}
+        setUserInfo={setUserInfo}
+      />
+
+      <main>
+        <SubNavbar
+          activeCategory={activeCategory}
+          setActiveCategory={setActiveCategory}
+          searchInputValue={searchInputValue}
+          handleOnSearchInputChange={(e) =>
+            setSearchInputValue(e.target.value)
+          }
           getTotalItems={getTotalItems}
-          handleOnCheckout={handleOnCheckout}
-          isCheckingOut={isCheckingOut}
-          order={order}
-          error={error}
-          userInfo={userInfo}
-          setUserInfo={setUserInfo}
         />
 
-        <main>
-          {/* category / search bar */}
-          <SubNavbar
-            activeCategory={activeCategory}
-            setActiveCategory={setActiveCategory}
-            searchInputValue={searchInputValue}
-            handleOnSearchInputChange={(e) =>
-              setSearchInputValue(e.target.value)
+        <Routes>
+          {/* Home & Listing */}
+          <Route
+            path="/"
+            element={
+              <Home
+                products={products}
+                isFetching={isFetching}
+                activeCategory={activeCategory}
+                searchInputValue={searchInputValue}
+                addToCart={addToCart}
+                removeFromCart={removeFromCart}
+                getQuantity={getQuantity}
+              />
             }
           />
 
-          <Routes>
-            {/* product grid */}
-            <Route
-              path="/"
-              element={
-                <Home
-                  products={products}
-                  isFetching={isFetching}
-                  activeCategory={activeCategory}
-                  searchInputValue={searchInputValue}
-                  addToCart={addToCart}
-                  removeFromCart={removeFromCart}
-                  getQuantity={getQuantity}
-                />
-              }
-            />
+          {/* Product detail */}
+          <Route
+            path="/products/:productId"
+            element={
+              <ProductDetail
+                addToCart={addToCart}
+                removeFromCart={removeFromCart}
+                getQuantity={getQuantity}
+              />
+            }
+          />
 
-            {/* product detail page */}
-            <Route
-              path="/products/:productId"
-              element={
-                <ProductDetail
-                  addToCart={addToCart}
-                  removeFromCart={removeFromCart}
-                  getQuantity={getQuantity}
-                />
-              }
-            />
+          {/* Cart */}
+          <Route
+            path="/cart"
+            element={
+              <ShoppingCart
+                products={products}
+                cart={cart}
+                clearCart={clearCart}
+                error={error}
+                isCheckingOut={isCheckingOut}
+                handleOnCheckout={handleOnCheckout}
+                order={order}
+              />
+            }
+          />
 
-            {/* full cart view */}
-            <Route
-              path="/cart"
-              element={
-                <ShoppingCart
-                  products={products}
-                  cart={cart}
-                  clearCart={clearCart}
-                  error={error}
-                  isCheckingOut={isCheckingOut}
-                  handleOnCheckout={handleOnCheckout}
-                  order={order}
-                />
-              }
-            />
+          {/* Post‐checkout success */}
+          <Route
+            path="/checkout-success"
+            element={<CheckoutSuccess order={order} />}
+          />
 
-            {/* after-checkout confirmation */}
-            <Route
-              path="/checkout-success"
-              element={<CheckoutSuccess order={order} />}
-            />
-          </Routes>
-        </main>
-      </BrowserRouter>
+          {/* Past orders listing */}
+          <Route path="/orders" element={<PastOrders />} />
+
+          {/* Optionally: you could show a detail page for one order */}
+          <Route path="/orders/:orderId" element={<PastOrders />} />
+        </Routes>
+      </main>
     </div>
   )
 }

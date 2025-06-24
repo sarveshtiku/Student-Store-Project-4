@@ -1,0 +1,35 @@
+.PastOrders-list ul,
+.PastOrders-detail ul {
+  list-style: none;
+  padding: 0;
+}
+.PastOrders-list li + li {
+  margin-top: 0.5rem;
+}
+.PastOrders-detail li + li {
+  margin-top: 0.25rem;
+}
+/* src/components/PastOrders/PastOrders.css */
+.PastOrders-list, .PastOrders-detail {
+  padding: 1rem;
+}
+.PastOrders-list ul.orders,
+.PastOrders-detail ul.items {
+  list-style: none;
+  padding: 0;
+}
+.PastOrders-list li,
+.PastOrders-detail li {
+  margin: 0.5rem 0;
+}
+.PastOrders-detail .total {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+}
+.PastOrders-detail .back-link {
+  display: inline-block;
+  margin-top: 1rem;
+}
+.error {
+  color: red;
+}

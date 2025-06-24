@@ -131,3 +131,124 @@
 .SubNavbar .category-menu li button:active {
   transform: translateY(1px);
 }
+
+
+.SubNavbar {
+  width: 100%;
+  background: white;
+  border-bottom: 1px solid #e4e4e4;
+}
+
+.SubNavbar .content {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 10px var(--side-padding);
+}
+
+.SubNavbar .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Top row: search + cart */
+.SubNavbar .top-row {
+  margin-bottom: 10px;
+}
+
+.SubNavbar .search-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.SubNavbar .search-bar input {
+  flex: 1;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  font-size: 14px;
+}
+
+.SubNavbar .search-bar i {
+  width: 40px;
+  height: 40px;
+  background: var(--bright-green);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+.SubNavbar .cart-button {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  text-decoration: none;
+  color: var(--font-dark);
+  font-weight: 500;
+}
+
+.SubNavbar .cart-button .material-icons {
+  font-size: 24px;
+}
+
+.SubNavbar .cart-count {
+  margin-left: 6px;
+  background: var(--bright-green);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+/* Bottom row: categories */
+.SubNavbar .bottom-row {
+  overflow-x: auto;
+}
+
+.SubNavbar .category-menu {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.SubNavbar .category-menu li button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  padding: 6px 0;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.SubNavbar .category-menu li.is-active button {
+  border-color: var(--bright-green);
+}
+.SubNavbar .cart-button {
+  position: relative;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+.SubNavbar .cart-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--bright-green);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

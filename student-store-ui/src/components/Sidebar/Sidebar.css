@@ -44,3 +44,23 @@
   cursor: pointer;
   color: white;
 }
+
+/* src/components/Sidebar/Sidebar.css */
+
+.sidebar-nav {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  text-align: center;
+}
+
+.past-orders-link {
+  display: inline-block;
+  color: white;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  text-decoration: none;
+}
+
+.past-orders-link:hover {
+  text-decoration: underline;
+}

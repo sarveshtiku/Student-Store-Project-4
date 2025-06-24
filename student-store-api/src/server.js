@@ -2,6 +2,8 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const prisma = require('./db/db')
+const orderItemsRouter = require('./routes/orderItems')   // ← new
+
 
 const app = express()
 app.use(cors())
@@ -10,6 +12,7 @@ app.use(express.json())
 // Mount routers
 app.use('/products', require('./routes/products'))
 app.use('/orders',   require('./routes/orders'))
+app.use('/order-items', orderItemsRouter)                   // ← new
 
 // Health check
 app.get('/', (req, res) => {
