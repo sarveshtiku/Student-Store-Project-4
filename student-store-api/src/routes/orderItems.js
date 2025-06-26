@@ -3,15 +3,18 @@ const express = require('express')
 const router = express.Router()
 const prisma = require('../db/db')
 
-// 1️⃣ GET /order-items — list every orderItem, include product data
+// GET /order-items — list every order item, with its product & order
 router.get('/', async (req, res) => {
   try {
     const items = await prisma.orderItem.findMany({
-      include: { product: true },
+      include: {
+        product: true,
+        order: true,
+      },
     })
     res.json(items)
   } catch (err) {
-    console.error(err)
+    console.error('GET /order-items error:', err)
     res.status(500).json({ error: 'Failed to fetch order items' })
   }
 })

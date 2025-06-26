@@ -10,9 +10,8 @@ export default function PastOrders() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  // Email filter state
+  // Email filter state (live filtering)
   const [emailFilter, setEmailFilter] = useState("")
-  const [emailInput, setEmailInput] = useState("")
   const [filtering, setFiltering] = useState(false)
 
   useEffect(() => {
@@ -66,7 +65,8 @@ export default function PastOrders() {
         <ul>
           {order.orderItems.map((item) => (
             <li key={item.id}>
-              {item.quantity}× {item.product.name} @ ${item.price.toFixed(2)}
+              {item.quantity}× {item.product.name} @ $
+              {item.price.toFixed(2)}
             </li>
           ))}
         </ul>
@@ -88,29 +88,11 @@ export default function PastOrders() {
         <input
           type="email"
           placeholder="Filter by customer email"
-          value={emailInput}
-          onChange={(e) => setEmailInput(e.target.value)}
-          onKeyDown={e => {
-            if (e.key === "Enter" && emailInput.trim()) {
-              setEmailFilter(emailInput.trim())
-            }
-          }}
+          value={emailFilter}
+          onChange={e => setEmailFilter(e.target.value)}
         />
-        <button
-          disabled={!emailInput.trim()}
-          onClick={() => setEmailFilter(emailInput.trim())}
-        >
-          Filter
-        </button>
-        {filtering && (
-          <button
-            onClick={() => {
-              setEmailInput("")
-              setEmailFilter("")
-            }}
-          >
-            Clear
-          </button>
+        {emailFilter && (
+          <button onClick={() => setEmailFilter("")}>Clear</button>
         )}
       </div>
 
@@ -126,7 +108,8 @@ export default function PastOrders() {
             <li key={o.id}>
               <Link to={`/orders/${o.id}`}>
                 #{o.id} — {o.customerEmail} —{" "}
-                {o.createdAt.slice(0, 10)} — ${o.totalPrice.toFixed(2)}
+                {o.createdAt.slice(0, 10)} — $
+                {o.totalPrice.toFixed(2)}
               </Link>
             </li>
           ))}
@@ -134,4 +117,4 @@ export default function PastOrders() {
       )}
     </div>
   )
-}
+} 

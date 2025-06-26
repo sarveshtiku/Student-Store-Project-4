@@ -1,7 +1,4 @@
-// src/components/ShoppingCart/ShoppingCart.jsx
-import { useNavigate } from "react-router-dom"
 import PaymentInfo from "../PaymentInfo/PaymentInfo"
-import CheckoutSuccess from "../CheckoutSuccess/CheckoutSuccess"
 import { calculateTaxesAndFees, calculateTotal } from "../../utils/calculations"
 import { formatPrice } from "../../utils/format"
 import "./ShoppingCart.css"
@@ -16,9 +13,9 @@ export default function ShoppingCart({
   isCheckingOut,
   handleOnCheckout,
   order,
+  addToCart,
+  removeFromCart,
 }) {
-  const navigate = useNavigate()
-
   // Build lookup map for products
   const productMap = products.reduce((map, p) => {
     map[p.id] = p
@@ -32,6 +29,7 @@ export default function ShoppingCart({
       id: p.id,
       name: p.name,
       price: p.price,
+      imageUrl: p.imageUrl,
       quantity: qty,
       totalPrice: p.price * qty,
     }
@@ -42,12 +40,10 @@ export default function ShoppingCart({
   const total = calculateTotal(subtotal)
 
   if (order) {
-    // You could also <Navigate to="/checkout-success" /> here
-    navigate("/checkout-success")
+    window.location.href = "/checkout-success"
     return null
   }
 
-  // If cart is empty
   if (rows.length === 0) {
     return (
       <div className="ShoppingCart notification">
@@ -57,49 +53,51 @@ export default function ShoppingCart({
   }
 
   return (
-    <div className="ShoppingCart">
-      {/* Cart table */}
-      <div className="CartTable">
-        <div className="header-row">
-          <span className="flex-2">Name</span>
-          <span className="center">Qty</span>
-          <span className="center">Unit</span>
-          <span className="center">Cost</span>
+    <div className="ShoppingCart amazon-cart">
+      <div className="cart-main">
+        {/* LEFT: Cart Items */}
+        <div className="cart-items">
+          <h2>Your Cart</h2>
+          {rows.map((r) => (
+            <div key={r.id} className="cart-item">
+              <img src={r.imageUrl} alt={r.name} className="cart-item-image" />
+              <div className="cart-item-info">
+                <div className="cart-item-name">{r.name}</div>
+                <div className="cart-item-qty-controls">
+                  <button onClick={() => removeFromCart(productMap[r.id])} disabled={r.quantity <= 1}>-</button>
+                  <span className="cart-item-qty">{r.quantity}</span>
+                  <button onClick={() => addToCart(productMap[r.id])}>+</button>
+                  <button className="cart-item-remove" onClick={() => removeFromCart(productMap[r.id], true)}>Remove</button>
+                </div>
+                <div className="cart-item-price">{formatPrice(r.price)} each</div>
+                <div className="cart-item-total">Total: {formatPrice(r.totalPrice)}</div>
+              </div>
+            </div>
+          ))}
         </div>
-        {rows.map((r) => (
-          <div key={r.id} className="product-row">
-            <span className="flex-2">{r.name}</span>
-            <span className="center">{r.quantity}</span>
-            <span className="center">{formatPrice(r.price)}</span>
-            <span className="center">{formatPrice(r.totalPrice)}</span>
+        {/* RIGHT: Summary and Checkout */}
+        <div className="cart-summary">
+          <div className="summary-row">
+            <span>Subtotal</span>
+            <span>{formatPrice(subtotal)}</span>
           </div>
-        ))}
+          <div className="summary-row">
+            <span>Taxes & Fees</span>
+            <span>{formatPrice(taxesAndFees)}</span>
+          </div>
+          <div className="summary-row total">
+            <span>Total</span>
+            <span>{formatPrice(total)}</span>
+          </div>
+          <PaymentInfo
+            userInfo={userInfo}
+            setUserInfo={setUserInfo}
+            handleOnCheckout={handleOnCheckout}
+            isCheckingOut={isCheckingOut}
+            error={error}
+          />
+        </div>
       </div>
-
-      {/* Receipt summary with tax */}
-      <div className="receipt">
-        <div className="row">
-          <span>Subtotal</span>
-          <span>{formatPrice(subtotal)}</span>
-        </div>
-        <div className="row">
-          <span>Taxes & Fees</span>
-          <span>{formatPrice(taxesAndFees)}</span>
-        </div>
-        <div className="row total">
-          <span>Total</span>
-          <span>{formatPrice(total)}</span>
-        </div>
-      </div>
-
-      {/* Payment form */}
-      <PaymentInfo
-        userInfo={userInfo}
-        setUserInfo={setUserInfo}
-        handleOnCheckout={handleOnCheckout}
-        isCheckingOut={isCheckingOut}
-        error={error}
-      />
     </div>
   )
 }

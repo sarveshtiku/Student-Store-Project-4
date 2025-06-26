@@ -1,18 +1,24 @@
-import "./CheckoutSuccess.css"
+import { useNavigate } from "react-router-dom";
+import "./CheckoutSuccess.css";
 
 const CheckoutSuccess = ({ order, setOrder }) => {
+  const navigate = useNavigate();
+
   const handleOnClose = () => {
-    setOrder(null)
-  }
+    if (setOrder) setOrder(null);
+    navigate("/"); // Redirect to home page
+  };
 
   const renderReceipt = () => (
     <>
-      <p className="header">{order.purchase.receipt.lines[0]}</p>
+      <p className="header">{order?.purchase?.receipt?.lines[0]}</p>
       <ul className="purchase">
-        {order.purchase.receipt.lines.slice(1).map((line, idx) => (Boolean(line) ? <li key={idx}>{line}</li> : null))}
+        {order?.purchase?.receipt?.lines
+          ?.slice(1)
+          .map((line, idx) => (Boolean(line) ? <li key={idx}>{line}</li> : null))}
       </ul>
     </>
-  )
+  );
 
   return (
     <div className="CheckoutSuccess">
@@ -27,7 +33,9 @@ const CheckoutSuccess = ({ order, setOrder }) => {
           <header className="card-head">
             <h4 className="card-title">Receipt</h4>
           </header>
-          <section className="card-body">{order?.purchase?.receipt ? renderReceipt() : "Success!"}</section>
+          <section className="card-body">
+            {order?.purchase?.receipt ? renderReceipt() : "Success!"}
+          </section>
           <footer className="card-foot">
             <button className="button is-success" onClick={handleOnClose}>
               Shop More
@@ -46,7 +54,7 @@ const CheckoutSuccess = ({ order, setOrder }) => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default CheckoutSuccess
+export default CheckoutSuccess;

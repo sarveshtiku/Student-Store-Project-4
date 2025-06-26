@@ -1,78 +1,60 @@
-// src/routes/orders.js
 const express = require('express')
 const router = express.Router()
 const prisma = require('../db/db')
 
-// GET /orders — list all orders (you probably don’t need product details here)
-router.get("/", async (req, res) => {
+// ─── LIST ORDERS (with optional email filter) ────────────────────────────────
+router.get('/', async (req, res) => {
+  const { email } = req.query
   try {
     const orders = await prisma.order.findMany({
-      include: {
-        orderItems: {
-          include: { /* you can omit product here if you only need totals in the list view */ },
-        },
-      },
-    });
-    res.json(orders);
+      where: email ? { customerEmail: email } : {},
+      include: { orderItems: { include: { product: true } } },
+      orderBy: { createdAt: 'desc' },
+    })
+    res.json(orders)
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to fetch orders" });
+    console.error(err)
+    res.status(500).json({ error: 'Failed to fetch orders' })
   }
-});
+})
 
-// GET /orders/:id — one order + its items + each item’s product
-router.get("/:id", async (req, res) => {
-  const id = Number(req.params.id);
+// ─── GET ONE ORDER ─────────────────────────────────────────────────────────────
+router.get('/:id', async (req, res) => {
+  const id = Number(req.params.id)
   try {
     const order = await prisma.order.findUnique({
       where: { id },
-      include: {
-        orderItems: {
-          include: { product: true },    // <<<<< make sure to include product
-        },
-      },
-    });
-    if (!order) return res.status(404).json({ error: "Order not found" });
-    res.json(order);
+      include: { orderItems: { include: { product: true } } },
+    })
+    if (!order) return res.status(404).json({ error: 'Order not found' })
+    res.json(order)
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to fetch order" });
+    console.error(err)
+    res.status(500).json({ error: 'Failed to fetch order' })
   }
-});
+})
 
-// POST /orders — create a new order with items
+// ─── CREATE ORDER ──────────────────────────────────────────────────────────────
 router.post('/', async (req, res) => {
-  const { customer, status, items } = req.body
-  if (!customer || !status || !Array.isArray(items)) {
+  const { customerEmail, status, items } = req.body
+  if (!customerEmail || !items?.length) {
     return res
       .status(400)
-      .json({ error: 'customer, status and items[] are required' })
+      .json({ error: 'customerEmail and items are required' })
   }
 
-  // compute total price server-side
-  const totalPrice = items.reduce(
-    (sum, { price, quantity }) => sum + price * quantity,
-    0
-  )
+  const totalPrice = items.reduce((sum, i) => sum + i.price * i.quantity, 0)
 
   try {
     const created = await prisma.order.create({
       data: {
-        customer,
+        customerEmail,
         status,
         totalPrice,
         createdAt: new Date(),
-        orderItems: {
-          create: items.map(({ productId, quantity, price }) => ({
-            product: { connect: { id: productId } },
-            quantity,
-            price,
-          })),
-        },
+        orderItems: { create: items },
       },
-      include: {
-        orderItems: { include: { product: true } },
-      },
+      include: { orderItems: { include: { product: true } } },
     })
     res.status(201).json(created)
   } catch (err) {
@@ -81,16 +63,14 @@ router.post('/', async (req, res) => {
   }
 })
 
-// PUT /orders/:id — update order fields (e.g. status)
+// ─── UPDATE ORDER ──────────────────────────────────────────────────────────────
 router.put('/:id', async (req, res) => {
   const id = Number(req.params.id)
   try {
     const updated = await prisma.order.update({
       where: { id },
       data: req.body,
-      include: {
-        orderItems: { include: { product: true } },
-      },
+      include: { orderItems: { include: { product: true } } },
     })
     res.json(updated)
   } catch (err) {
@@ -99,7 +79,7 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-// DELETE /orders/:id — delete order (cascades to items)
+// ─── DELETE ORDER ──────────────────────────────────────────────────────────────
 router.delete('/:id', async (req, res) => {
   const id = Number(req.params.id)
   try {
@@ -111,17 +91,13 @@ router.delete('/:id', async (req, res) => {
   }
 })
 
-//
-// ─── ORDER-ITEM SUB-RESOURCE ────────────────────────────────────────────────────
-//
+// ─── ORDER-ITEMS ENDPOINTS ─────────────────────────────────────────────────────
 
-// GET /orders/:id/items — list items for a given order
-router.get('/:id/items', async (req, res) => {
-  const orderId = Number(req.params.id)
+// GET /order-items — list every OrderItem
+router.get('/items/all', async (_req, res) => {
   try {
     const items = await prisma.orderItem.findMany({
-      where: { orderId },
-      include: { product: true },
+      include: { product: true, order: true },
     })
     res.json(items)
   } catch (err) {
@@ -130,11 +106,10 @@ router.get('/:id/items', async (req, res) => {
   }
 })
 
-// POST /orders/:id/items — add a new item to an existing order
+// POST /orders/:id/items — add item to existing order
 router.post('/:id/items', async (req, res) => {
   const orderId = Number(req.params.id)
   const { productId, quantity, price } = req.body
-
   if (!productId || !quantity || !price) {
     return res
       .status(400)
@@ -144,12 +119,11 @@ router.post('/:id/items', async (req, res) => {
   try {
     const newItem = await prisma.orderItem.create({
       data: {
-        order: { connect: { id: orderId } },
-        product: { connect: { id: productId } },
+        orderId,
+        productId,
         quantity,
         price,
       },
-      include: { product: true },
     })
     res.status(201).json(newItem)
   } catch (err) {

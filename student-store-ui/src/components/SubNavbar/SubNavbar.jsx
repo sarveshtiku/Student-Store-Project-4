@@ -1,5 +1,5 @@
 // src/components/SubNavbar/SubNavbar.jsx
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./SubNavbar.css";
 
 export default function SubNavbar({
@@ -18,6 +18,14 @@ export default function SubNavbar({
     "Supplies",
   ];
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleCategoryClick = (cat) => {
+    setActiveCategory(cat);
+    if (location.pathname !== "/") {
+      navigate("/");
+    }
+  };
 
   return (
     <nav className="SubNavbar">
@@ -51,7 +59,7 @@ export default function SubNavbar({
                 key={cat}
                 className={activeCategory === cat ? "is-active" : ""}
               >
-                <button onClick={() => setActiveCategory(cat)}>
+                <button onClick={() => handleCategoryClick(cat)}>
                   {cat}
                 </button>
               </li>

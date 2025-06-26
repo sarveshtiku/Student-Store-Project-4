@@ -13,9 +13,7 @@
 .CheckoutSuccess > h3 > span {
   margin-left: 10px;
 }
-.CheckoutSuccess p {
-  color: white;
-}
+
 .CheckoutSuccess .card {
   color: white;
   display: flex;
@@ -46,4 +44,30 @@
   background: transparent;
   border: solid 1px white;
   color: white;
+}
+/* Center the content and make text black */
+.CheckoutSuccess {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  color: #222; /* Make all text black */
+}
+
+.CheckoutSuccess .content {
+  text-align: center;
+  color: #222; /* Ensure the message is black */
+  font-size: 1.2rem;
+  margin-top: 2rem;
+}
+
+.CheckoutSuccess h3 {
+  color: #222;
+  text-align: center;
+}
+
+.CheckoutSuccess .content {
+  color: #222 !important;
+  text-align: center;
 }

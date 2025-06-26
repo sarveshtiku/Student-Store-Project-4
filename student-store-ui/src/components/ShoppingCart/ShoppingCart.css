@@ -1,247 +1,189 @@
-.ShoppingCart {
+/* Amazon-style cart layout */
+.ShoppingCart.amazon-cart {
   width: 100%;
-  color: white;
-}
-.ShoppingCart .open {
-  max-width: 550px;
-}
-.ShoppingCart .open > h3 {
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.ShoppingCart .open > h3 > span {
-  margin-left: 10px;
-}
-.ShoppingCart .notification {
-  color: white;
-  text-align: center;
-  margin: 10px;
-}
-.ShoppingCart .cart-icons {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 50px;
-  width: 100%;
-  padding-left: 0.5rem;
-}
-.ShoppingCart .cart-icon {
-  margin-bottom: 16px;
-}
-.ShoppingCart .CartTable {
-  width: 100%;
-  margin: 0 10px;
-}
-.ShoppingCart .CartTable .header {
-  display: flex;
-  flex-direction: column;
-  background: var(--pure-white);
-  border: solid 1px var(--border-color);
-  border-radius: 4px;
-  width: 100%;
-}
-.ShoppingCart .header-row {
-  display: flex;
-  height: 50px;
-  background: var(--dark-blue);
-  margin-bottom: 15px;
-}
-.ShoppingCart .header-row span {
-  flex: 1;
-  color: var(--pure-white);
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  font-size: 17px;
-  font-weight: 600;
-  margin-left: 15px;
-}
-.ShoppingCart .header-row span.center {
-  display: flex;
-  justify-content: center;
-}
-.ShoppingCart .flex-2 {
-  flex: 2;
-  padding-left: 10px;
-}
-.ShoppingCart .product-row {
-  display: flex;
-  flex-direction: row;
-  padding-bottom: 20px;
-  margin-top: 10px;
-  border-bottom: solid 1px var(--border-color);
-}
-.ShoppingCart .product-row span {
-  flex: 1;
-}
-.ShoppingCart .product-row span.center {
-  display: flex;
-  justify-content: center;
-}
-
-.ShoppingCart .receipt {
-  display: flex;
-  flex-direction: column;
-  background: var(--pure-white);
-  border-radius: 4px;
-  width: 100%;
-  margin-top: 10px;
-}
-.ShoppingCart .receipt span {
-  flex: 1;
-}
-.ShoppingCart .receipt span.center {
-  display: flex;
-  justify-content: center;
-  font-weight: 600;
-}
-.ShoppingCart .receipt .receipt-subtotal,
-.ShoppingCart .receipt .receipt-taxes,
-.ShoppingCart .receipt .receipt-total {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 5px 0;
-}
-.ShoppingCart .receipt .receipt-total {
-  border-top: solid 1px var(--border-color);
-}
-.ShoppingCart .receipt .label {
-  font-weight: 600;
-  padding-left: 10px;
-}
-/* src/components/ShoppingCart/ShoppingCart.css */
-
-.ShoppingCart {
-  width: 100%;
-  height: 100%;
-  background: var(--dark-blue);
-  padding: 1rem;
+  min-height: 60vh;
+  background: #f6f6f6;
+  padding: 2rem 0;
   box-sizing: border-box;
 }
 
-/* CONTAINER WHEN OPEN */
-.ShoppingCart .open {
-  max-width: 575px; /* match your sidebar width */
-  margin: 0 auto;
-  color: white;
+.amazon-cart .cart-main {
   display: flex;
-  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-start;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* TABLE STYLING */
-.CartTable {
-  background: white;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 1rem;
+.amazon-cart .cart-items {
+  flex: 2;
+  background: #fff;
+  border-radius: 8px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
-.CartTable table {
-  width: 100%;
-  border-collapse: collapse;
+.amazon-cart .cart-items h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: #222;
 }
 
-.CartTable thead {
-  background: var(--dark-blue);
+.amazon-cart .cart-item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding: 1rem 0;
 }
 
-.CartTable th,
-.CartTable td {
-  padding: 0.75rem 1rem;
-  text-align: left;
-}
-
-.CartTable th {
-  color: white;
-  font-weight: 600;
-}
-
-.CartTable tbody tr {
-  border-bottom: 1px solid var(--border-color);
-}
-
-.CartTable tbody tr:last-child {
+.amazon-cart .cart-item:last-child {
   border-bottom: none;
 }
 
-.CartTable td.center {
-  text-align: center;
-}
-
-/* RECEIPT STYLING */
-.receipt {
-  background: white;
+.amazon-cart .cart-item-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-right: 1.5rem;
+  border: 1px solid #eee;
   border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 1.5rem;
+  background: #fafafa;
 }
 
-.receipt .row {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.75rem 1rem;
+.amazon-cart .cart-item-info {
+  flex: 1;
 }
 
-.receipt .row:not(:last-child) {
-  border-bottom: 1px solid var(--border-color);
-}
-
-.receipt .row.total {
+.amazon-cart .cart-item-name {
   font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #222;
 }
 
-/* PAYMENT INFO SECTION */
-.PaymentInfo {
-  background: var(--dark-blue);
-  padding: 0; /* container already has padding */
-}
-
-.PaymentInfo h3 {
-  color: white;
-  margin-bottom: 1rem;
+.amazon-cart .cart-item-qty-controls {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
-.PaymentInfo .input-field {
-  margin-bottom: 1rem;
+.amazon-cart .cart-item-qty-controls button {
+  background: #eee;
+  border: none;
+  border-radius: 4px;
+  padding: 0.3rem 0.7rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
-.PaymentInfo .label {
-  color: white;
-  display: block;
+.amazon-cart .cart-item-qty-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.amazon-cart .cart-item-remove {
+  background: #ffdddd;
+  color: #b00;
+  margin-left: 1rem;
+  font-size: 0.95rem;
+  padding: 0.3rem 0.8rem;
+}
+
+.amazon-cart .cart-item-price,
+.amazon-cart .cart-item-total {
+  color: #444;
   margin-bottom: 0.25rem;
 }
 
-.PaymentInfo .control input {
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
+.amazon-cart .cart-summary {
+  flex: 1;
+  background: #f7f7f7;
+  border-radius: 8px;
+  padding: 2rem 1.5rem;
+  min-width: 300px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
-.PaymentInfo .is-danger {
-  color: var(--bright-red);
+.amazon-cart .summary-row {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 1rem;
+  font-size: 1.1rem;
 }
 
-.PaymentInfo .field .button {
+.amazon-cart .summary-row.total {
+  font-weight: 700;
+  font-size: 1.2rem;
+  border-top: 1px solid #ddd;
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+.amazon-cart .checkout-btn {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid white;
-  background: transparent;
-  color: white;
-  cursor: pointer;
+  padding: 1rem;
+  background: #ffd814;
+  color: #222;
+  font-weight: 700;
+  border: none;
   border-radius: 4px;
-  font-size: 1rem;
+  margin-top: 1.5rem;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background 0.2s;
 }
 
-.PaymentInfo .field .button:disabled {
-  opacity: 0.6;
+.amazon-cart .checkout-btn:disabled {
+  background: #eee;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+/* PaymentInfo section inside summary */
+.amazon-cart .cart-summary .PaymentInfo {
+  background: transparent;
+  color: #222;
+  margin-top: 2rem;
+}
+
+.amazon-cart .cart-summary .PaymentInfo h3 {
+  color: #222;
+}
+/* Make Payment Info header black */
+.amazon-cart .cart-summary .PaymentInfo h3 {
+  color: #222 !important; /* black */
+}
+
+/* Make input text and placeholder black */
+.amazon-cart .cart-summary .PaymentInfo input {
+  color: #222 !important;         /* input text black */
+  background: #fff;
+  border: 1px solid #ccc;
+}
+
+.amazon-cart .cart-summary .PaymentInfo input::placeholder {
+  color: #222 !important;         /* placeholder text black */
+  opacity: 1;
+}
+
+/* Make the submit button black with white text */
+.amazon-cart .cart-summary .PaymentInfo button,
+.amazon-cart .cart-summary .PaymentInfo input[type='submit'] {
+  background: #222 !important;    /* black background */
+  color: #fff !important;         /* white text */
+  border: none;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.amazon-cart .cart-summary .PaymentInfo button:disabled,
+.amazon-cart .cart-summary .PaymentInfo input[type='submit']:disabled {
+  background: #eee !important;
+  color: #aaa !important;
   cursor: not-allowed;
 }

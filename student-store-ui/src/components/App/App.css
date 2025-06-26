@@ -17,3 +17,34 @@
   overflow-x: hidden;
   padding-left: 60px;
 }
+/* e.g. src/components/App/App.css */
+
+.App main {
+  transition: margin-left 0.2s ease;
+  /* by default, sidebar is open 250px wide */
+  margin-left: 250px;
+}
+
+/* when you collapse */
+.App .Sidebar.closed + main {
+  margin-left: 48px;
+}
+/* src/components/App/App.css */
+
+.App {
+  display: flex;
+  flex-direction: row;
+  overflow-x: hidden;
+}
+
+/* make main sit to the right of your fixed sidebar */
+.App main {
+  flex: 1;
+  transition: margin-left 0.2s ease;
+  margin-left: 250px;       /* match your sidebar open width */
+}
+
+/* when you collapse */
+.App .Sidebar.closed + main {
+  margin-left: 48px;        /* match your sidebar closed width */
+}

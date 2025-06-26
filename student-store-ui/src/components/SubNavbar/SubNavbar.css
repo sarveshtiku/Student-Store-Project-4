@@ -252,3 +252,155 @@
   align-items: center;
   justify-content: center;
 }
+
+/* Sidebar.css */
+
+.Sidebar {
+  position: relative;
+  background: #2c3e50;
+  color: white;
+  transition: width 0.2s ease;
+  overflow: hidden;
+  /* default to expanded width */
+  width: 250px;
+}
+
+.Sidebar.closed {
+  width: 48px; /* just enough for the arrow button */
+}
+
+/* wrapper holds all content inside the sidebar */
+.Sidebar .wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* always show the toggle button in top‐left */
+.Sidebar .toggle-button {
+  position: absolute;
+  top: 12px;
+  right: -24px; /* stick it out of the collapsed sidebar */
+  background: #2c3e50;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+/* rotate arrow when open/closed */
+.Sidebar.closed .toggle-button i {
+  transform: rotate(180deg);
+}
+.Sidebar.open .toggle-button i {
+  transform: rotate(0deg);
+}
+
+/* hide everything except the toggle-button when closed */
+.Sidebar.closed .wrapper > *:not(.toggle-button) {
+  display: none;
+}
+
+/* when open, show all */
+.Sidebar.open .wrapper > * {
+  display: block;
+}
+
+/* style your logo area */
+.Sidebar .logo {
+  padding: 1rem;
+  text-align: center;
+}
+
+/* simple nav link for Past Orders link */
+.Sidebar .nav-link {
+  padding: 0.75rem 1rem;
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: block;
+}
+.Sidebar .nav-link:hover {
+  background: rgba(255,255,255,0.1);
+}
+/* src/components/Sidebar/Sidebar.css */
+
+.Sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: #2c3e50;
+  color: white;
+  transition: width 0.2s ease;
+  overflow: hidden;
+  z-index: 100;           /* sit above the page background */
+  width: 250px;           /* open width */
+}
+
+.Sidebar.closed {
+  width: 48px;            /* collapsed width (just arrow) */
+}
+
+/* ensure wrapper itself is only as wide as the sidebar */
+.Sidebar .wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* toggle button, always visible (sticks out a bit even when collapsed) */
+.Sidebar .toggle-button {
+  position: absolute;
+  top: 12px;
+  right: -24px;           /* half the toggle-button’s width, so it protrudes */
+  background: #2c3e50;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 101;           /* above the sidebar itself */
+  transition: transform 0.2s ease;
+}
+
+.Sidebar.closed .toggle-button i {
+  transform: rotate(180deg);
+}
+.Sidebar.open .toggle-button i {
+  transform: rotate(0deg);
+}
+
+/* hide everything but the toggle button when collapsed */
+.Sidebar.closed .wrapper > *:not(.toggle-button) {
+  display: none;
+}
+
+/* when open, show all children */
+.Sidebar.open .wrapper > * {
+  display: block;
+}
+
+/* your logo styling */
+.Sidebar .logo {
+  padding: 1rem;
+  text-align: center;
+}
+
+/* nav link styling */
+.Sidebar .nav-link {
+  padding: 0.75rem 1rem;
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.Sidebar .nav-link:hover {
+  background: rgba(255,255,255,0.1);
+}

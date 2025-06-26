@@ -3,7 +3,7 @@ import React from "react"
 import "./PaymentInfo.css"
 
 export default function PaymentInfo({
-  userInfo = { name: "", dorm_number: "" },    // ① safe default
+  userInfo = { name: "", email: "" },    // ① safe default
   setUserInfo,
   handleOnCheckout,
   isCheckingOut,
@@ -34,15 +34,15 @@ export default function PaymentInfo({
       </div>
 
       <div className="input-field">
-        <label className="label">Dorm Room Number</label>
+        <label className="label">Email</label>
         <div className="control">
           <input
             className="input"
             type="text"
-            placeholder="Dorm Room Number"
-            value={userInfo.dorm_number}           // ② fixed field
+            placeholder="Email"
+            value={userInfo.email}           // ② fixed field
             onChange={(e) =>
-              setUserInfo((u) => ({ ...u, dorm_number: e.target.value }))
+              setUserInfo((u) => ({ ...u, email: e.target.value }))
             }
           />
         </div>

@@ -1,6 +1,6 @@
 // src/components/App/App.jsx
 import { useState, useEffect } from "react"
-import { Routes, Route, useNavigate } from "react-router-dom"
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom"
 import { fetchJSON } from "../../services/api"
 
 import SubNavbar from "../SubNavbar/SubNavbar"
@@ -23,11 +23,12 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [activeCategory, setActiveCategory] = useState("All Categories")
   const [searchInputValue, setSearchInputValue] = useState("")
-  const [userInfo, setUserInfo] = useState({ name: "", dorm_number: "" })
+  const [userInfo, setUserInfo] = useState({ name: "", email: "" })
 
   const navigate = useNavigate()
+  const location = useLocation()
 
-  // load products
+  // Load products
   useEffect(() => {
     setIsFetching(true)
     fetchJSON("/products")
@@ -36,20 +37,35 @@ export default function App() {
       .finally(() => setIsFetching(false))
   }, [])
 
+  // Clear order when navigating away from checkout-success
+  useEffect(() => {
+    if (location.pathname !== "/checkout-success" && order) {
+      setOrder(null)
+    }
+  }, [location.pathname])
+
+  // Cart logic
   const addToCart = (p) =>
     setCart((c) => ({ ...c, [p.id]: (c[p.id] || 0) + 1 }))
-  const removeFromCart = (p) =>
+
+  const removeFromCart = (p, removeAll = false) =>
     setCart((c) => {
       const next = { ...c }
-      next[p.id] = (next[p.id] || 0) - 1
-      if (next[p.id] <= 0) delete next[p.id]
+      if (removeAll) {
+        delete next[p.id]
+      } else {
+        next[p.id] = (next[p.id] || 0) - 1
+        if (next[p.id] <= 0) delete next[p.id]
+      }
       return next
     })
+
   const clearCart = () => setCart({})
   const getQuantity = (p) => cart[p.id] || 0
   const getTotalItems = () =>
     Object.values(cart).reduce((sum, q) => sum + q, 0)
 
+  // Checkout logic
   const handleOnCheckout = async () => {
     setIsCheckingOut(true)
     setError(null)
@@ -64,7 +80,7 @@ export default function App() {
       const created = await fetchJSON("/orders", {
         method: "POST",
         body: JSON.stringify({
-          customer: 123,
+          customerEmail: userInfo.email,
           status: "pending",
           items,
         }),
@@ -149,6 +165,10 @@ export default function App() {
                 isCheckingOut={isCheckingOut}
                 handleOnCheckout={handleOnCheckout}
                 order={order}
+                addToCart={addToCart}
+                removeFromCart={removeFromCart}
+                userInfo={userInfo}
+                setUserInfo={setUserInfo}
               />
             }
           />
