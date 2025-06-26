@@ -1,4 +1,4 @@
-import "./Sidebar.css"
+import "./SidebarCart.css"
 
 export default function SidebarCart({
   cart,
@@ -29,17 +29,11 @@ export default function SidebarCart({
         {cartItems.length === 0 && <div className="empty">Cart is empty</div>}
         {cartItems.map(item => (
           <div className="sidebar-cart-item" key={item.id}>
-            <img src={item.image} alt={item.name} />
+            <img src={item.imageUrl} alt={item.name} />
             <div className="sidebar-cart-item-details">
               <div className="name">{item.name}</div>
               <div className="qty-controls">
                 <span>Qty: {item.quantity}</span>
-                <button
-                  onClick={() => removeFromCart(item, true)}
-                  className="remove-btn"
-                >
-                  Remove
-                </button>
               </div>
               <div className="price">${(item.price * item.quantity).toFixed(2)}</div>
             </div>
@@ -55,13 +49,13 @@ export default function SidebarCart({
         <input
           type="text"
           placeholder="Student ID"
-          value={userInfo.studentId}
+          value={userInfo.studentId || ""}
           onChange={e => setUserInfo({ ...userInfo, studentId: e.target.value })}
         />
         <input
           type="email"
           placeholder="Email"
-          value={userInfo.email}
+          value={userInfo.email || ""}
           onChange={e => setUserInfo({ ...userInfo, email: e.target.value })}
         />
         <button type="submit" disabled={isCheckingOut}>
@@ -72,4 +66,4 @@ export default function SidebarCart({
       </form>
     </div>
   )
-} 
+}

@@ -121,16 +121,28 @@ export default function PastOrders() {
             : "No orders yet."}
         </p>
       ) : (
-        <ul>
-          {orders.map((o) => (
-            <li key={o.id}>
-              <Link to={`/orders/${o.id}`}>
-                #{o.id} — {o.customerEmail} —{" "}
-                {o.createdAt.slice(0, 10)} — ${o.totalPrice.toFixed(2)}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <table className="PastOrders-table">
+          <thead>
+            <tr>
+              <th>Order #</th>
+              <th>Email</th>
+              <th>Date</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((o) => (
+              <tr key={o.id}>
+                <td>
+                  <Link to={`/orders/${o.id}`}>#{o.id}</Link>
+                </td>
+                <td>{o.customerEmail}</td>
+                <td>{o.createdAt.slice(0, 10)}</td>
+                <td>${o.totalPrice.toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   )

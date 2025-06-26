@@ -15,6 +15,7 @@ export default function Sidebar({
   error,
   userInfo,
   setUserInfo,
+  removeFromCart,
 }) {
   return (
     <aside className={`Sidebar${isOpen ? " open" : " closed"}`}>
@@ -47,6 +48,7 @@ export default function Sidebar({
             error={error}
             userInfo={userInfo}
             setUserInfo={setUserInfo}
+            removeFromCart={removeFromCart}
           />
         )}
       </div>
