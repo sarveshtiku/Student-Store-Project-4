@@ -100,6 +100,8 @@ Deployed Application (optional): [Student Store Deployed Site](ADD_LINK_HERE)
 
 https://www.loom.com/share/69afe63251aa4a2e98d72a434aacedd8?sid=842dce53-6a78-46b1-bfcf-6483ec47c5a3
 
+https://www.loom.com/share/a907706339874d9a968154b04ca4d932?sid=d528deb5-a275-4405-8bc9-ec22919f71d8
+
 
 ### Reflection
 
