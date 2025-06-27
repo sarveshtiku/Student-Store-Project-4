@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const prisma = require('../db/db')
 
-// ─── LIST ORDERS (with optional email filter) ────────────────────────────────
+// ─── LIST ORDERS
 router.get('/', async (req, res) => {
   const { email } = req.query
   try {
@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
   }
 })
 
-// ─── GET ONE ORDER ─────────────────────────────────────────────────────────────
+// ─── GET ONE ORDER 
 router.get('/:id', async (req, res) => {
   const id = Number(req.params.id)
   try {
@@ -34,7 +34,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-// ─── CREATE ORDER ──────────────────────────────────────────────────────────────
+// ─── CREATE ORDER 
 router.post('/', async (req, res) => {
   const { customerEmail, status, items } = req.body
   if (!customerEmail || !items?.length) {
@@ -80,6 +80,7 @@ router.put('/:id', async (req, res) => {
 })
 
 // ─── DELETE ORDER ──────────────────────────────────────────────────────────────
+
 router.delete('/:id', async (req, res) => {
   const id = Number(req.params.id)
   try {

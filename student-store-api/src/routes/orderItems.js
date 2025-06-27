@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
   }
 })
 
-// 2️⃣ POST /orders/:orderId/items — add one item to an existing order
+// POST /orders/:orderId/items — add one item to an existing order
 router.post('/orders/:orderId/items', async (req, res) => {
   const orderId = Number(req.params.orderId)
   const { productId, quantity, price } = req.body
@@ -36,7 +36,7 @@ router.post('/orders/:orderId/items', async (req, res) => {
         quantity,
         price,
       },
-      include: { product: true }, // if you want the product joined back
+      include: { product: true },
     })
     res.status(201).json(newItem)
   } catch (err) {
