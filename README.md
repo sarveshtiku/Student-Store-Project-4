@@ -108,20 +108,20 @@ Deployed Application (optional): [Student Store Deployed Site](ADD_LINK_HERE)
 
 * Did the topics discussed in your labs prepare you to complete the assignment? Be specific, which features in your weekly assignment did you feel unprepared to complete?
 
-Add your response here
+Yes, the weekly labs on building Express servers and using Prisma laid the foundation for my backend CRUD endpoints. In particular, Unit 2’s lab on query parameters helped me implement filtering and sorting on GET /products, and Unit 3’s lab on database relationships prepared me to model Order ↔ OrderItem relations. I did feel a bit under-prepared when it came to integrating Nodemailer for email verification—our labs didn’t cover sending transactional emails or managing async flows in that depth—so that portion took me extra time to research.
 
 * If you had more time, what would you have done differently? Would you have added additional features? Changed the way your project responded to a particular event, etc.
   
-Add your response here
+I would have: Added full email‐verification flows (generating tokens, clickable links, expiry). Built a proper “Past Orders” page UI with client‐side filtering by email and status. Polished the mobile and collapsed‐sidebar experience, perhaps with animations via Framer Motion. Introduced React Query or SWR to simplify data‐fetching and cache invalidation on the frontend.
 
 * Reflect on your project demo, what went well? Were there things that maybe didn't go as planned? Did you notice something that your peer did that you would like to try next time?
 
-Add your response here
+The core API functionality demoed smoothly: creating, reading, updating, and deleting products and orders all worked end-to-end, and the checkout workflow successfully generated a receipt. I did run into a few hiccups styling the sidebar collapse/expand logic and wiring up the “View Cart” link, but those ultimately reinforced my understanding of React Router and layout timing. Watching a peer implement a modal overlay inspired me to refactor our ProductDetail into a truly modal component next time.
 
 ### Open-source libraries used
 
-- Add any links to open-source libraries used in your project.
+- Express – server framework Prisma Client – type-safe database ORM React & React Router v6 – frontend SPA and routing Vite – development build tool Nodemailer – transactional email sending Material Icons – iconography
 
 ### Shout out
 
-Give a shout out to somebody from your cohort that especially helped you during your project. This can be a fellow peer, instructor, TA, mentor, etc.
+Big shout out to Alex, Devarsh, Keith, and Lucia—and also my co-scholar Paula! Thanks for all the support and feedback throughout the project 🙏
