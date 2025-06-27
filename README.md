@@ -1,8 +1,6 @@
-📝 `NOTE` Use this template to initialize the contents of a README.md file for your application. As you work on your assignment over the course of the week, update the required or stretch features lists to indicate which features you have completed by changing `[ ]` to `[x]`. (🚫 Remove this paragraph before submitting your assignment.)
-
 ## Unit Assignment: Student Store
 
-Submitted by: **NAME**
+Submitted by: **Sarvesh Tiku**
 
 Deployed Application (optional): [Student Store Deployed Site](ADD_LINK_HERE)
 
